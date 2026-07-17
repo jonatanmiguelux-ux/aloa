@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aloa — Auditoría Digital</title>
+<meta name="description" content="Analizamos tu estrategia digital, detectamos problemas y te mostramos dónde enfocar tus próximos pasos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07080f;
+  --bg-soft:#0c0e1a;
+  --surface:rgba(255,255,255,.03);
+  --border:rgba(255,255,255,.08);
+  --border-strong:rgba(255,255,255,.14);
+  --text:#eceef6;
+  --muted:#9aa1b8;
+  --blue:#5b7cfa;
+  --violet:#8b5cf6;
+  --glow-blue:rgba(91,124,250,.35);
+  --glow-violet:rgba(139,92,246,.30);
+  --radius:18px;
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:rgba(139,92,246,.35)}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;line-height:1.12;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none}
+.container{width:min(1120px,92%);margin:0 auto}
+
+/* ---------- ambient background ---------- */
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.55}
+.orb-1{width:560px;height:560px;background:var(--glow-blue);top:-180px;left:-140px}
+.orb-2{width:520px;height:520px;background:var(--glow-violet);top:30vh;right:-200px}
+.orb-3{width:480px;height:480px;background:rgba(91,124,250,.18);bottom:-220px;left:30%}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.35;
+  background-image:radial-gradient(rgba(255,255,255,.045) 1px,transparent 1px);
+  background-size:26px 26px;
+  mask-image:radial-gradient(ellipse at 50% 0%,black 0%,transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse at 50% 0%,black 0%,transparent 75%);
+}
+main,header,footer{position:relative;z-index:2}
+
+/* ---------- header ---------- */
+.site-header{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:rgba(7,8,15,.55);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s ease,background .3s ease;
+}
+.site-header.scrolled{border-bottom-color:var(--border);background:rgba(7,8,15,.8)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{font-family:var(--font-display);font-weight:700;font-size:1.45rem;letter-spacing:.01em;display:flex;align-items:center;gap:.55rem}
+.logo-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--violet));box-shadow:0 0 14px var(--glow-blue)}
+.nav-links{display:flex;align-items:center;gap:2.2rem;font-size:.93rem;color:var(--muted)}
+.nav-links a{transition:color .25s}
+.nav-links a:hover,.nav-links a:focus-visible{color:var(--text)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  font-family:var(--font-display);font-weight:600;font-size:.95rem;
+  padding:.78rem 1.5rem;border-radius:999px;cursor:pointer;border:none;
+  transition:transform .25s ease,box-shadow .25s ease,background .25s ease;
+}
+.btn-primary{
+  color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--violet));
+  box-shadow:0 6px 24px rgba(91,124,250,.28);
+}
+.btn-primary:hover,.btn-primary:focus-visible{transform:translateY(-2px);box-shadow:0 10px 32px rgba(139,92,246,.4)}
+.btn-ghost{color:var(--text);background:var(--surface);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--border-strong)}
+.nav .btn{padding:.6rem 1.3rem;font-size:.88rem}
+.menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:.4rem}
+.menu-toggle span{display:block;width:22px;height:2px;background:var(--text);margin:5px 0;border-radius:2px;transition:.3s}
+
+/* ---------- hero ---------- */
+.hero{padding:170px 0 110px;text-align:center;position:relative}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--border);border-radius:999px;padding:.45rem 1.1rem;
+  background:var(--surface);margin-bottom:2rem;
+}
+.hero-badge .pulse{width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 10px var(--glow-blue);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{
+  font-size:clamp(2.4rem,5.6vw,4.3rem);
+  max-width:840px;margin:0 auto 1.4rem;
+  background:linear-gradient(120deg,#fff 30%,#aab6ff 70%,#c4a8ff 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p{max-width:620px;margin:0 auto 2.4rem;color:var(--muted);font-size:1.14rem}
+.hero-ctas{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-bottom:2.6rem}
+.hero-tags{display:flex;justify-content:center;align-items:center;gap:1rem;color:var(--muted);font-size:.9rem;letter-spacing:.06em;flex-wrap:wrap}
+.hero-tags span{opacity:.9}
+
+/* audit scan visual */
+.scanner{
+  max-width:760px;margin:4.5rem auto 0;
+  border:1px solid var(--border);border-radius:var(--radius);
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+  padding:1.6rem;position:relative;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.5);
+  text-align:left;
+}
+.scanner::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--blue),var(--violet),transparent);
+}
+.scan-line{
+  position:absolute;left:0;right:0;height:64px;top:-80px;
+  background:linear-gradient(180deg,transparent,rgba(91,124,250,.12),transparent);
+  border-bottom:1px solid rgba(139,92,246,.45);
+  animation:scan 5.5s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes scan{0%{top:-80px}55%{top:105%}100%{top:105%}}
+.scanner-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.3rem;font-size:.8rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.scanner-head b{font-family:var(--font-display);color:var(--text);letter-spacing:.04em}
+.scan-rows{display:grid;gap:.85rem}
+.scan-row{display:grid;grid-template-columns:150px 1fr auto;align-items:center;gap:1rem;font-size:.88rem}
+.scan-row .label{color:var(--muted)}
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--violet));width:0;transition:width 1.4s cubic-bezier(.22,1,.36,1)}
+.tag{font-family:var(--font-display);font-size:.72rem;letter-spacing:.08em;padding:.22rem .6rem;border-radius:99px;border:1px solid var(--border)}
+.tag.ok{color:#7ee2b0;border-color:rgba(126,226,176,.3)}
+.tag.warn{color:#f7c66b;border-color:rgba(247,198,107,.3)}
+.tag.alert{color:#f78ca0;border-color:rgba(247,140,160,.3)}
+
+/* ---------- sections ---------- */
+section{padding:110px 0}
+.eyebrow{
+  font-family:var(--font-display);font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--blue);margin-bottom:1.1rem;display:block;
+}
+.section-title{font-size:clamp(1.9rem,3.8vw,2.9rem);margin-bottom:1.1rem}
+.section-sub{color:var(--muted);font-size:1.08rem;max-width:560px}
+
+/* problem */
+.problem{text-align:center}
+.problem .section-sub{margin:0 auto 3rem}
+.mantra{
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(1.6rem,4.4vw,3rem);letter-spacing:-.01em;
+  display:flex;justify-content:center;gap:.6em;flex-wrap:wrap;
+}
+.mantra span{
+  background:linear-gradient(120deg,var(--blue),var(--violet));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  position:relative;
+}
+.mantra span::after{
+  content:"";position:absolute;left:0;right:0;bottom:-10px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  transform:scaleX(0);transform-origin:left;transition:transform .8s cubic-bezier(.22,1,.36,1);
+}
+.mantra.in span::after{transform:scaleX(1)}
+.mantra span:nth-child(2)::after{transition-delay:.25s}
+.mantra span:nth-child(3)::after{transition-delay:.5s}
+
+/* services */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:3.2rem}
+.card{
+  position:relative;border-radius:var(--radius);padding:2.1rem 1.9rem;
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+  border:1px solid var(--border);
+  transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease;
+  overflow:hidden;
+}
+.card::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;opacity:0;transition:opacity .4s;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(139,92,246,.14),transparent 65%);
+  pointer-events:none;
+}
+.card:hover{transform:translateY(-6px);border-color:var(--border-strong);box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.card:hover::before{opacity:1}
+.card-icon{
+  width:46px;height:46px;border-radius:12px;margin-bottom:1.5rem;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(91,124,250,.18),rgba(139,92,246,.18));
+  border:1px solid rgba(139,92,246,.25);
+}
+.card-icon svg{width:22px;height:22px;stroke:url(#grad);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-size:1.22rem;margin-bottom:.7rem}
+.card p{color:var(--muted);font-size:.96rem}
+
+/* process */
+.process-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:3.4rem;position:relative}
+.step{position:relative;padding:2rem 1.8rem;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface)}
+.step-num{
+  font-family:var(--font-display);font-weight:700;font-size:.85rem;
+  width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;margin-bottom:1.4rem;
+  box-shadow:0 0 22px rgba(91,124,250,.35);
+}
+.step h3{font-size:1.15rem;margin-bottom:.6rem}
+.step p{color:var(--muted);font-size:.95rem}
+.step-connector{position:absolute;top:50%;height:1px;background:linear-gradient(90deg,var(--blue),var(--violet));opacity:.35}
+
+/* final CTA */
+.final-cta{padding:60px 0 130px}
+.cta-box{
+  text-align:center;border-radius:26px;padding:5rem 2rem;
+  border:1px solid var(--border);
+  background:
+    radial-gradient(600px circle at 30% 0%,rgba(91,124,250,.16),transparent 60%),
+    radial-gradient(600px circle at 75% 100%,rgba(139,92,246,.16),transparent 60%),
+    var(--bg-soft);
+  position:relative;overflow:hidden;
+}
+.cta-box h2{font-size:clamp(1.9rem,4vw,2.9rem);max-width:640px;margin:0 auto 2.2rem}
+.footnote{margin-top:1.4rem;font-size:.85rem;color:var(--muted)}
+
+/* footer */
+.site-footer{border-top:1px solid var(--border);padding:2.4rem 0;background:rgba(7,8,15,.6)}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.footer-inner .logo{font-size:1.15rem}
+.footer-tag{color:var(--muted);font-size:.9rem;font-family:var(--font-display);letter-spacing:.04em}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal-d1{transition-delay:.12s}
+.reveal-d2{transition-delay:.24s}
+.reveal-d3{transition-delay:.36s}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  .bar i{width:var(--w)!important}
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:860px){
+  .cards,.process-grid{grid-template-columns:1fr}
+  .nav-links{
+    position:fixed;inset:72px 0 auto 0;flex-direction:column;gap:1.6rem;
+    background:rgba(7,8,15,.97);border-bottom:1px solid var(--border);
+    padding:2rem 0 2.4rem;transform:translateY(-130%);transition:transform .35s ease;
+  }
+  .nav-links.open{transform:none}
+  .menu-toggle{display:block}
+  .menu-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .menu-toggle.open span:nth-child(2){opacity:0}
+  .menu-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .hero{padding:140px 0 80px}
+  section{padding:80px 0}
+  .scan-row{grid-template-columns:110px 1fr auto;font-size:.8rem}
+  .cta-box{padding:3.5rem 1.4rem}
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="grain"></div>
+
+<svg width="0" height="0" aria-hidden="true"><defs>
+<linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#5b7cfa"/><stop offset="100%" stop-color="#8b5cf6"/>
+</linearGradient></defs></svg>
+
+<header class="site-header" id="header">
+  <div class="container nav">
+    <a href="#" class="logo" aria-label="Aloa, inicio"><span class="logo-dot"></span>Aloa</a>
+    <nav class="nav-links" id="navLinks" aria-label="Navegación principal">
+      <a href="#servicios">Servicios</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#contacto">Contacto</a>
+      <a href="#contacto" class="btn btn-primary">Solicitar auditoría</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge reveal"><span class="pulse"></span>Auditoría digital independiente</div>
+      <h1 class="reveal reveal-d1">Descubre qué está frenando el crecimiento de tu negocio.</h1>
+      <p class="reveal reveal-d2">Analizamos tu estrategia digital, detectamos problemas y te mostramos dónde enfocar tus próximos pasos.</p>
+      <div class="hero-ctas reveal reveal-d3">
+        <a href="#contacto" class="btn btn-primary">Solicitar auditoría</a>
+        <a href="#como-funciona" class="btn btn-ghost">Cómo funciona</a>
+      </div>
+      <div class="hero-tags reveal reveal-d3">
+        <span>Meta Ads</span>·<span>Negocio Digital</span>·<span>SEO</span>
+      </div>
+
+      <div class="scanner reveal" id="scanner" aria-hidden="true">
+        <div class="scan-line"></div>
+        <div class="scanner-head"><b>Aloa · Diagnóstico</b><span>Análisis en curso</span></div>
+        <div class="scan-rows">
+          <div class="scan-row"><span class="label">Campañas Meta</span><span class="bar"><i style="--w:46%"></i></span><span class="tag alert">Fuga detectada</span></div>
+          <div class="scan-row"><span class="label">Embudo de venta</span><span class="bar"><i style="--w:63%"></i></span><span class="tag warn">Mejorable</span></div>
+          <div class="scan-row"><span class="label">SEO técnico</span><span class="bar"><i style="--w:38%"></i></span><span class="tag alert">Limitado</span></div>
+          <div class="scan-row"><span class="label">Propuesta de valor</span><span class="bar"><i style="--w:82%"></i></span><span class="tag ok">Sólida</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="problem">
+    <div class="container">
+      <span class="eyebrow reveal">El problema</span>
+      <h2 class="section-title reveal reveal-d1">Deja de adivinar qué está fallando.</h2>
+      <p class="section-sub reveal reveal-d2">Antes de invertir más tiempo y dinero, descubre qué necesitas mejorar.</p>
+      <p class="mantra reveal reveal-d3" id="mantra"><span>Analizamos.</span><span>Detectamos.</span><span>Priorizamos.</span></p>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="servicios">
+    <div class="container">
+      <span class="eyebrow reveal">Servicios</span>
+      <h2 class="section-title reveal reveal-d1">Auditorías que van al punto.</h2>
+      <p class="section-sub reveal reveal-d2">Tres frentes, un mismo objetivo: que sepas exactamente dónde actuar.</p>
+      <div class="cards">
+        <article class="card reveal">
+          <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg></div>
+          <h3>Auditoría Meta Ads</h3>
+          <p>Detectamos errores, fugas de presupuesto y oportunidades de mejora en tus campañas.</p>
+        </article>
+        <article class="card reveal reveal-d1">
+          <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+          <h3>Auditoría de Negocio Digital</h3>
+          <p>Analizamos tu negocio para identificar puntos débiles y oportunidades de crecimiento.</p>
+        </article>
+        <article class="card reveal reveal-d2">
+          <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+          <h3>Auditoría SEO</h3>
+          <p>Detectamos problemas que pueden estar limitando la visibilidad de tu sitio en Google.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="como-funciona">
+    <div class="container">
+      <span class="eyebrow reveal">Cómo funciona</span>
+      <h2 class="section-title reveal reveal-d1">Claridad en 3 pasos.</h2>
+      <div class="process-grid">
+        <article class="step reveal">
+          <div class="step-num">1</div>
+          <h3>Cuéntanos tu situación</h3>
+          <p>Nos compartes tu contexto, tus objetivos y qué te preocupa hoy de tu negocio digital.</p>
+        </article>
+        <article class="step reveal reveal-d1">
+          <div class="step-num">2</div>
+          <h3>Analizamos</h3>
+          <p>Revisamos a fondo tus campañas, tu negocio o tu SEO con criterios claros y medibles.</p>
+        </article>
+        <article class="step reveal reveal-d2">
+          <div class="step-num">3</div>
+          <h3>Recibe tu plan de acción</h3>
+          <p>Te entregamos hallazgos priorizados y pasos concretos: qué corregir primero y por qué.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta" id="contacto">
+    <div class="container">
+      <div class="cta-box reveal">
+        <h2>Antes de invertir más, descubre qué necesitas mejorar.</h2>
+        <a href="mailto:hola@aloa.digital?subject=Solicitud%20de%20auditor%C3%ADa" class="btn btn-primary">Solicitar mi auditoría</a>
+        <p class="footnote">Analizamos. Detectamos. Priorizamos.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span class="logo"><span class="logo-dot"></span>Aloa</span>
+    <span class="footer-tag">Analizamos. Detectamos. Priorizamos.</span>
+  </div>
+</footer>
+
+<script>
+// header state on scroll
+const header = document.getElementById('header');
+const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 12);
+onScroll();
+window.addEventListener('scroll', onScroll, {passive:true});
+
+// mobile menu
+const toggle = document.getElementById('menuToggle');
+const links = document.getElementById('navLinks');
+toggle.addEventListener('click', () => {
+  const open = links.classList.toggle('open');
+  toggle.classList.toggle('open', open);
+  toggle.setAttribute('aria-expanded', open);
+  toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+});
+links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  links.classList.remove('open');
+  toggle.classList.remove('open');
+  toggle.setAttribute('aria-expanded','false');
+}));
+
+// scroll reveal
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+}, {threshold:.18, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal, .mantra').forEach(el => io.observe(el));
+
+// animate scanner bars when visible
+const scanner = document.getElementById('scanner');
+const barIO = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      scanner.querySelectorAll('.bar i').forEach((bar, i) => {
+        setTimeout(() => { bar.style.width = getComputedStyle(bar).getPropertyValue('--w'); }, 300 + i*180);
+      });
+      barIO.unobserve(scanner);
+    }
+  });
+}, {threshold:.3});
+barIO.observe(scanner);
+
+// subtle cursor-follow glow on service cards
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('pointermove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
+});
+</script>
+</body>
+</html>

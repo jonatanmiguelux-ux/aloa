@@ -1,0 +1,45 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="80%">
+      <stop offset="0%" stop-color="#151C38"/>
+      <stop offset="55%" stop-color="#0D1226"/>
+      <stop offset="100%" stop-color="#080B18"/>
+    </radialGradient>
+    <linearGradient id="letra" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2E6BFF"/>
+      <stop offset="55%" stop-color="#5B5BF7"/>
+      <stop offset="100%" stop-color="#9B4DFF"/>
+    </linearGradient>
+    <linearGradient id="onda" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#2E6BFF" stop-opacity="0"/>
+      <stop offset="35%" stop-color="#3E7BFF" stop-opacity="0.85"/>
+      <stop offset="65%" stop-color="#7B5BFA" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#9B4DFF" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5B5BF7" stop-opacity="0.35"/>
+      <stop offset="70%" stop-color="#5B5BF7" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#5B5BF7" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Letra A geométrica con degradado -->
+  <path d="M 512 268
+           L 728 756
+           M 512 268
+           L 296 756
+           M 398 570
+           L 626 570"
+        fill="none"
+        stroke="url(#letra)"
+        stroke-width="92"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- Onda sutil bajo la A (guiño al logo original) -->
+  <path d="M 220 856 Q 366 806 512 856 T 804 856"
+        fill="none"
+        stroke="url(#onda)"
+        stroke-width="26"
+        stroke-linecap="round"/>
+</svg>
